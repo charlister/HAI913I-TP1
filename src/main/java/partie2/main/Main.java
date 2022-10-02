@@ -116,7 +116,7 @@ public class Main {
         System.out.println
                 (
                         " -----------------------------------------------\n" +
-                        "| CET INTERFACE MET A VOTRE DISPOSITION UN      |\n" +
+                        "| CETTE INTERFACE MET A VOTRE DISPOSITION UN      |\n" +
                         "| ENSEMBLE DE FONCTIONNALITES VOUS PERMETTANT   |\n" +
                         "| DE REALISER UNE ANALYSE STATIQUE D'UN PROJET. |\n" +
                         " -----------------------------------------------\n"
