@@ -216,13 +216,22 @@ public class VisitDataCollector {
         return sortMapMethodIntegerAndLimit(mapMethodNbParams, 1);
     }
 
-    public static void displayMap(Map<TypeDeclaration, Integer> map, String msg, String strClassOrMethod) {
-        System.out.println(msg);
+    public static void displayMapClassInteger(Map<TypeDeclaration, Integer> map) {
         map
                 .entrySet()
                 .stream()
                 .forEach(x -> System.out.println(
-                        "( " + strClassOrMethod + " ) : " + x.getKey().getName() + "\t\t"  +
+                        "( CLASS ) : " + x.getKey().getName() + "\t\t"  +
+                                "( " + x.getValue() + " )")
+                );
+    }
+
+    public static void displayMapMethodInteger(Map<MethodDeclaration, Integer> map) {
+        map
+                .entrySet()
+                .stream()
+                .forEach(x -> System.out.println(
+                        "( METHOD ) : " + x.getKey().getName() + "\t\t"  +
                                 "( " + x.getValue() + " )")
                 );
     }
