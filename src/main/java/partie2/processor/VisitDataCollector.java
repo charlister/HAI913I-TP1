@@ -1,14 +1,27 @@
-package partie2.analysis;
+package partie2.processor;
 
+import com.mxgraph.layout.mxCircleLayout;
+import com.mxgraph.layout.mxIGraphLayout;
+import com.mxgraph.util.mxCellRenderer;
+import guru.nidi.graphviz.engine.Format;
+import guru.nidi.graphviz.engine.Graphviz;
+import guru.nidi.graphviz.engine.Renderer;
+import guru.nidi.graphviz.model.MutableGraph;
+import guru.nidi.graphviz.parse.Parser;
 import org.apache.commons.io.FileUtils;
-import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
-import partie2.parser.Parser;
+import org.eclipse.jdt.core.dom.*;
+import org.jgraph.graph.DefaultEdge;
+import org.jgrapht.ext.JGraphXAdapter;
+import org.jgrapht.graph.DefaultDirectedGraph;
+import partie2.parser.MyParser;
 import partie2.projectexplorer.ProjectExplorer;
 import partie2.visitors.*;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -23,6 +36,10 @@ public class VisitDataCollector {
     private Map<MethodDeclaration, Integer> mapMethodNbLines;
     private Map<MethodDeclaration, Integer> mapMethodNbParams;
     private Set<String> packageNames;
+    private Map<TypeDeclaration, Map<MethodDeclaration, Set<MethodInvocation>>> mapTheCallGraph;
+    private StringBuilder strBuilderGraphData;
+    private Set<String> setLink;
+    private DefaultDirectedGraph<String, DefaultEdge> graph;
 
     public VisitDataCollector() {
         this.classCounter      = 0;
@@ -34,6 +51,10 @@ public class VisitDataCollector {
         this.mapMethodNbLines     = new HashMap<>();
         this.mapMethodNbParams    = new HashMap<>();
         this.packageNames         = new HashSet<>();
+        this.mapTheCallGraph      = new HashMap<>();
+        this.strBuilderGraphData = new StringBuilder();
+        setLink = new HashSet<>();
+        this.graph = new DefaultDirectedGraph<>(DefaultEdge.class);
     }
 
     // 1 bis.
@@ -216,6 +237,11 @@ public class VisitDataCollector {
         return sortMapMethodIntegerAndLimit(mapMethodNbParams, 1);
     }
 
+    // 14.
+    public Map<TypeDeclaration, Map<MethodDeclaration, Set<MethodInvocation>>> getTheCallGraph() {
+        return mapTheCallGraph;
+    }
+
     public static void displayMapClassInteger(Map<TypeDeclaration, Integer> map) {
         map
                 .entrySet()
@@ -236,12 +262,130 @@ public class VisitDataCollector {
                 );
     }
 
+//    BUILD GRAPH
+    private void collectGraphData(CompilationUnit cu) {
+        boolean isMethodNodeAdded;
+        TypeDeclarationVisitor visitorClass = new TypeDeclarationVisitor();
+        cu.accept(visitorClass);
+
+        for (TypeDeclaration nodeClass : visitorClass.getTypeDeclarationList()) {
+            MethodDeclarationVisitor visitorMethod = new MethodDeclarationVisitor();
+            nodeClass.accept(visitorMethod);
+
+            Map<MethodDeclaration, Set<MethodInvocation>> mapMethodDeclarationInvocation = new HashMap<>();
+            String caller;
+
+            for (MethodDeclaration nodeMethod : visitorMethod.getMethodDeclarationList()) {
+                nodeMethod.resolveBinding();
+                MethodInvocationVisitor visitorMethodInvocation = new MethodInvocationVisitor();
+                nodeMethod.accept(visitorMethodInvocation);
+                mapMethodDeclarationInvocation.put(nodeMethod, visitorMethodInvocation.getMethodInvocations());
+
+                caller = nodeClass.getName().toString()+"::"+nodeMethod.getName();
+
+                isMethodNodeAdded = false;
+
+                for (MethodInvocation methodInvocation : visitorMethodInvocation.getMethodInvocations()) {
+
+                    String callee;
+
+                    if (methodInvocation.getExpression() != null) {
+                        if (methodInvocation.getExpression().resolveTypeBinding() != null) {
+                            if (!isMethodNodeAdded) {
+                                graph.addVertex(caller);
+                                isMethodNodeAdded = true;
+                            }
+                            callee = methodInvocation.getExpression().resolveTypeBinding().getName()+"::"+methodInvocation.getName();
+                            graph.addVertex(callee);
+                            graph.addEdge(caller, callee);
+
+                            setLink.add("\t\""+caller+"\"->\""+callee+"\"\n");
+                        }
+                    }
+                    else if (methodInvocation.resolveMethodBinding() != null) {
+                        if (!isMethodNodeAdded) {
+                            graph.addVertex(caller);
+                            isMethodNodeAdded = true;
+                        }
+                        callee = methodInvocation.resolveMethodBinding().getDeclaringClass().getName()+"::"+methodInvocation.getName();
+                        graph.addVertex(callee);
+                        graph.addEdge(caller, callee);
+
+                        setLink.add("\t\""+caller+"\"->\""+callee+"\"\n");
+                    }
+                }
+            }
+            mapTheCallGraph.put(nodeClass, mapMethodDeclarationInvocation);
+        }
+    }
+
+    public void buildGraphWithJGraphT() throws IOException {
+        JGraphXAdapter<String, DefaultEdge> graphAdapter = new JGraphXAdapter<String, DefaultEdge>(graph);
+        mxIGraphLayout layout = new mxCircleLayout(graphAdapter);
+        layout.execute(graphAdapter.getDefaultParent());
+
+        BufferedImage image = mxCellRenderer.createBufferedImage(graphAdapter, null, 2, Color.WHITE, true, null);
+        File imgFile = new File("graph_jgrapht.png");
+        ImageIO.write(image, "PNG", imgFile);
+
+        if (!imgFile.exists()) {
+            System.err.println("Le fichier "+imgFile.getName()+" n'a pas pu être créé !");
+        }
+    }
+
+    private void writeGraphInDotFile(String fileGraphPath) throws IOException {
+        FileWriter fW = new FileWriter(fileGraphPath);
+        fW.write("digraph G {\n");
+        for (String link :
+                setLink) {
+            fW.write(link);
+        }
+//        fW.write(strBuilderGraphData.toString());
+        fW.write("}");
+        fW.close();
+    }
+
+    private void convertDotToSVG(String fileGraphPath) throws IOException {
+        Parser p = new Parser();
+        MutableGraph g = p.read(new File(fileGraphPath));
+        Renderer render = Graphviz.fromGraph(g).render(Format.SVG);
+        render.toFile(new File("graph_graphviz.svg"));
+    }
+
+    public void buildGraphWithGraphViz() throws IOException {
+        writeGraphInDotFile("graph.dot");
+        convertDotToSVG("graph.dot");
+    }
+    public static void displayTheCAllGraph(Map<TypeDeclaration, Map<MethodDeclaration, Set<MethodInvocation>>> aCallGraph) {
+        Set<Map.Entry<TypeDeclaration, Map<MethodDeclaration, Set<MethodInvocation>>>> set = aCallGraph.entrySet();
+        String callee;
+        for (Map.Entry<TypeDeclaration, Map<MethodDeclaration, Set<MethodInvocation>>> mapEntry1 : set) {
+            System.out.println("(CLASS) : " + mapEntry1.getKey().getName());
+            for (Map.Entry<MethodDeclaration, Set<MethodInvocation>> mapEntry2: mapEntry1.getValue().entrySet()) {
+                System.out.println("\t(METHOD) : " + mapEntry2.getKey().getName());
+                for (MethodInvocation methodInvocation : mapEntry2.getValue()) {
+                    if (methodInvocation.getExpression() != null) {
+                        if (methodInvocation.getExpression().resolveTypeBinding() != null) {
+                            callee = methodInvocation.getExpression().resolveTypeBinding().getName()+"::"+methodInvocation.getName();
+                            System.out.println("\t\t(CALL) : " + callee);
+                        }
+                    }
+                    else if (methodInvocation.resolveMethodBinding() != null) {
+                        callee = methodInvocation.resolveMethodBinding().getDeclaringClass().getName()+"::"+methodInvocation.getName();
+                        System.out.println("\t\t(CALL) : " + callee);
+                    }
+                }
+            }
+        }
+    }
+
+//    COLLECT DATA PROJECT
     public void makeAnalysis(String pathProject) throws IOException {
         ProjectExplorer projectExplorer = new ProjectExplorer(pathProject);
         ArrayList<File> javaFiles = projectExplorer.listJavaFilesForFolder();
         for(File javaFile : javaFiles) {
             String content = FileUtils.readFileToString(javaFile);
-            CompilationUnit cu = Parser.parseSource(content.toCharArray());
+            CompilationUnit cu = MyParser.parseSource(content.toCharArray());
 
             collectApplicationMethodsData(cu); 
             collectAppPackages(cu);
@@ -250,6 +394,8 @@ public class VisitDataCollector {
             collectNumberOfApplicationClasses(cu);
             collectNumberOfLineOfApplicationCode(cu);
             collectNumberOfRowByMethod(cu);
+
+            collectGraphData(cu);
         }
     }
 }

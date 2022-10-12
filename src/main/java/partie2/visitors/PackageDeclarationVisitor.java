@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PackageDeclarationVisitor extends ASTVisitor {
-    private String packageDeclarationName;
+    private String packageDeclarationName = "";
 
     public boolean visit(PackageDeclaration node) {
         packageDeclarationName = node.getName().toString();
@@ -22,13 +22,19 @@ public class PackageDeclarationVisitor extends ASTVisitor {
 
     public List<String> buildSubPackages() {
         List<String> result = new ArrayList<>();
-        String[] packageSplit = packageDeclarationName.split("\\.");
+        if (!packageDeclarationName.equals("")) {
+            if (packageDeclarationName.contains(".")) {
+                String[] packageSplit = packageDeclarationName.split("\\.");
 
-        String str = "";
-        for (String s : packageSplit) {
-            str += ((str.equals("") ? "" : ".") + s);
-            result.add(str);
+                String str = "";
+                for (String s : packageSplit) {
+                    str += ((str.equals("") ? "" : ".") + s);
+                    result.add(str);
+                }
+            }
+            else result.add(packageDeclarationName);
         }
+
         return result;
     }
 }
