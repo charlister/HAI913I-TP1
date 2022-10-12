@@ -4,10 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52147c33-4d80-4b85-81d4-a2df99befb45" name="Changes" comment="update displayMap method">
+    <list default="true" id="52147c33-4d80-4b85-81d4-a2df99befb45" name="Changes" comment="cli method">
+      <change afterPath="$PROJECT_DIR$/src/main/java/partie2/visitors/MethodInvocationVisitor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/Readme.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/partie2/analysis/VisitDataCollector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/partie2/processor/VisitDataCollector.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/partie2/main/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/partie2/main/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/partie2/parser/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/partie2/parser/MyParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/project/src/ilogic/ITest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/project/src/logic/Test.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/project/src/main/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/project/src/main/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,12 +48,16 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "C:/Users/senio/IdeaProjects/ERL/A_Rendre/TP1/src/main/java/partie2",
+    "last_opened_file_path": "C:/Users/senio/IdeaProjects/ERL/A_Rendre/TP1",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm"
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.4816092",
+    "settings.editor.selected.configurable": "preferences.lookFeel"
   }
 }]]></component>
   <component name="RecentsManager">
@@ -85,7 +97,16 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1664665135172</updated>
-      <workItem from="1664665137632" duration="31116000" />
+      <workItem from="1664665137632" duration="33629000" />
+      <workItem from="1664727911905" duration="565000" />
+      <workItem from="1664728525776" duration="1285000" />
+      <workItem from="1664734756279" duration="11802000" />
+      <workItem from="1664784720684" duration="149000" />
+      <workItem from="1664866682429" duration="12570000" />
+      <workItem from="1664995299626" duration="713000" />
+      <workItem from="1665142131939" duration="7391000" />
+      <workItem from="1665403745543" duration="36483000" />
+      <workItem from="1665590628097" duration="15039000" />
     </task>
     <task id="LOCAL-00001" summary="first commit">
       <created>1664706701788</created>
@@ -101,7 +122,14 @@
       <option name="project" value="LOCAL" />
       <updated>1664715247751</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="cli method">
+      <created>1664716603252</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1664716603252</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -121,6 +149,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="first commit" />
     <MESSAGE value="update displayMap method" />
-    <option name="LAST_COMMIT_MESSAGE" value="update displayMap method" />
+    <MESSAGE value="cli method" />
+    <option name="LAST_COMMIT_MESSAGE" value="cli method" />
   </component>
 </project>

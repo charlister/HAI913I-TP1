@@ -1,6 +1,6 @@
 package partie2.main;
 
-import partie2.analysis.VisitDataCollector;
+import partie2.processor.VisitDataCollector;
 
 import java.io.IOException;
 import java.util.Scanner;
@@ -24,12 +24,13 @@ public class Main {
         listFeatures.append("11.       Les classes qui possèdent plus de X méthodes (la valeur de X est à saisir).\n");
         listFeatures.append("12.       Les 10% des méthodes qui possèdent le plus grand nombre de lignes de code (par classe).\n");
         listFeatures.append("13.       Le nombre maximal de paramètres par rapport à toutes les méthodes de l’application.\n");
+        listFeatures.append("14.       Générer un graph d'appel.\n");
         listFeatures.append("menu.     Afficher le menu de nouveau.\n");
         listFeatures.append("quitter.  Quitter l’application.\n");
         System.out.print(listFeatures);
     }
 
-    private static void chooseAFeatures(VisitDataCollector visitDataCollector) throws IOException {
+    private static void chooseAFeatures(VisitDataCollector visitDataCollector) throws IOException, InterruptedException {
         displayFeatures();
         String choice = "";
         while (!choice.equals("quitter")) {
@@ -89,11 +90,19 @@ public class Main {
                     System.out.println("Le nombre maximal de paramètres par rapport à toutes les méthodes de l’application : ");
                     VisitDataCollector.displayMapMethodInteger(visitDataCollector.getMethodWithMostParams());
                     break;
+                case "14":
+                    System.err.println("Génération du graphe d'appel ...");
+                    Thread.sleep(1000);
+                    VisitDataCollector.displayTheCAllGraph(visitDataCollector.getTheCallGraph());
+                    visitDataCollector.buildGraphWithGraphViz();
+                    visitDataCollector.buildGraphWithJGraphT();
+                    Thread.sleep(1000);
+                    System.out.println("Graphe d'appel généré !");
+                    break;
                 case "menu":
                     displayFeatures();
                     break;
                 case "quitter":
-                    sc.close();
                     break;
                 default:
                     System.err.println("Choix incorrect ... Veuillez recommencer !");
@@ -102,7 +111,7 @@ public class Main {
         }
     }
 
-    private static void openCLI()  throws IOException {
+    private static void openCLI() throws IOException, InterruptedException {
         System.out.println("Veuillez indiquer le repertoire vers le projet à analyser : ");
         String projectPath = sc.nextLine();
 
@@ -112,16 +121,18 @@ public class Main {
         chooseAFeatures(visitDataCollector);
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         System.out.println
                 (
                         " -----------------------------------------------\n" +
-                        "| CETTE INTERFACE MET A VOTRE DISPOSITION UN      |\n" +
+                        "| CETTE INTERFACE MET A VOTRE DISPOSITION UN    |\n" +
                         "| ENSEMBLE DE FONCTIONNALITES VOUS PERMETTANT   |\n" +
                         "| DE REALISER UNE ANALYSE STATIQUE D'UN PROJET. |\n" +
                         " -----------------------------------------------\n"
                 );
         sc = new Scanner(System.in);
         openCLI();
+        Thread.sleep(1000);
+        sc.close();
     }
 }

@@ -21,6 +21,7 @@ public class Test implements ITest {
     }
 
     public void printSwitchTest() {
+        this.initAttr3List(1, 2, 3);
         switch (this.attr2) {
             case "B+":
                 System.out.println(this.attr2);
