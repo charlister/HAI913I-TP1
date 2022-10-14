@@ -4,16 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52147c33-4d80-4b85-81d4-a2df99befb45" name="Changes" comment="Gestion d'erreurs (Exceptions)">
-      <change afterPath="$PROJECT_DIR$/src/main/java/project2/src/AA.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/project2/src/BB.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/project2/src/CC.java" afterDir="false" />
+    <list default="true" id="52147c33-4d80-4b85-81d4-a2df99befb45" name="Changes" comment="Nouveau sous projets à analyser">
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/Readme.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/project/src/ilogic/ITest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/project1/src/ilogic/ITest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/project/src/logic/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/project1/src/logic/Test.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/project/src/main/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/project1/src/main/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/partie2/processor/VisitDataCollector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/partie2/processor/VisitDataCollector.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -108,7 +103,7 @@
       <workItem from="1665142131939" duration="7391000" />
       <workItem from="1665403745543" duration="36483000" />
       <workItem from="1665590628097" duration="25345000" />
-      <workItem from="1665673853494" duration="24614000" />
+      <workItem from="1665673853494" duration="29259000" />
     </task>
     <task id="LOCAL-00001" summary="first commit">
       <created>1664706701788</created>
@@ -159,7 +154,14 @@
       <option name="project" value="LOCAL" />
       <updated>1665747919429</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Nouveau sous projets à analyser">
+      <created>1665748842388</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1665748842388</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -183,6 +185,7 @@
     <MESSAGE value="gestion du graph d'appel" />
     <MESSAGE value="gestion du graphe d'appel" />
     <MESSAGE value="Gestion d'erreurs (Exceptions)" />
-    <option name="LAST_COMMIT_MESSAGE" value="Gestion d'erreurs (Exceptions)" />
+    <MESSAGE value="Nouveau sous projets à analyser" />
+    <option name="LAST_COMMIT_MESSAGE" value="Nouveau sous projets à analyser" />
   </component>
 </project>

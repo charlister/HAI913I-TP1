@@ -39,7 +39,7 @@ public class VisitDataCollector {
     private Set<String> packageNames;
     private Map<TypeDeclaration, Map<MethodDeclaration, Set<MethodInvocation>>> mapTheCallGraph;
     private Set<String> setLink;
-    private DefaultDirectedGraph<String, DefaultEdge> graph;
+    private DefaultDirectedGraph<String, DefaultEdge> graphJGraphT;
 
     public VisitDataCollector() {
         this.classCounter      = 0;
@@ -53,7 +53,7 @@ public class VisitDataCollector {
         this.packageNames         = new HashSet<>();
         this.mapTheCallGraph      = new HashMap<>();
         this.setLink = new HashSet<>();
-        this.graph = new DefaultDirectedGraph<>(DefaultEdge.class);
+        this.graphJGraphT = new DefaultDirectedGraph<>(DefaultEdge.class);
     }
 
     // 1 bis.
@@ -297,35 +297,35 @@ public class VisitDataCollector {
                     if (methodInvocation.getExpression() != null) {
                         if (methodInvocation.getExpression().resolveTypeBinding() != null) {
                             if (!isMethodNodeAdded) {
-                                graph.addVertex(caller);
+                                graphJGraphT.addVertex(caller);
                                 isMethodNodeAdded = true;
                             }
                             callee = methodInvocation.getExpression().resolveTypeBinding().getName()+"::"+methodInvocation.getName();
-                            graph.addVertex(callee);
-                            graph.addEdge(caller, callee);
+                            graphJGraphT.addVertex(callee);
+                            graphJGraphT.addEdge(caller, callee);
 
                             setLink.add("\t\""+caller+"\"->\""+callee+"\"\n");
                         }
                     }
                     else if (methodInvocation.resolveMethodBinding() != null) {
                         if (!isMethodNodeAdded) {
-                            graph.addVertex(caller);
+                            graphJGraphT.addVertex(caller);
                             isMethodNodeAdded = true;
                         }
                         callee = methodInvocation.resolveMethodBinding().getDeclaringClass().getName()+"::"+methodInvocation.getName();
-                        graph.addVertex(callee);
-                        graph.addEdge(caller, callee);
+                        graphJGraphT.addVertex(callee);
+                        graphJGraphT.addEdge(caller, callee);
 
                         setLink.add("\t\""+caller+"\"->\""+callee+"\"\n");
                     }
                     else {
                         if (!isMethodNodeAdded) {
-                            graph.addVertex(caller);
+                            graphJGraphT.addVertex(caller);
                             isMethodNodeAdded = true;
                         }
                         callee = nodeClass.getName()+"::"+methodInvocation.getName();
-                        graph.addVertex(callee);
-                        graph.addEdge(caller, callee);
+                        graphJGraphT.addVertex(callee);
+                        graphJGraphT.addEdge(caller, callee);
 
                         setLink.add("\t\""+caller+"\"->\""+callee+"\"\n");
                     }
@@ -336,16 +336,22 @@ public class VisitDataCollector {
     }
 
     public void buildGraphWithJGraphT() throws IOException {
-        JGraphXAdapter<String, DefaultEdge> graphAdapter = new JGraphXAdapter<String, DefaultEdge>(graph);
+        JGraphXAdapter<String, DefaultEdge> graphAdapter = new JGraphXAdapter<String, DefaultEdge>(graphJGraphT);
         mxIGraphLayout layout = new mxCircleLayout(graphAdapter);
         layout.execute(graphAdapter.getDefaultParent());
 
         BufferedImage image = mxCellRenderer.createBufferedImage(graphAdapter, null, 2, Color.WHITE, true, null);
         File imgFile = new File("graph_jgrapht.png");
+        if (imgFile.exists())
+            imgFile.delete();
+
         ImageIO.write(image, "PNG", imgFile);
 
         if (!imgFile.exists()) {
             System.err.println("Le fichier "+imgFile.getName()+" n'a pas pu être créé !");
+        }
+        else {
+            System.out.println(imgFile.getAbsolutePath());
         }
     }
 
@@ -363,7 +369,12 @@ public class VisitDataCollector {
         Parser p = new Parser();
         MutableGraph g = p.read(new File(fileGraphPath));
         Renderer render = Graphviz.fromGraph(g).render(Format.SVG);
-        render.toFile(new File("graph_graphviz.svg"));
+        File imgFile = new File("graph_graphviz.svg");
+        if (imgFile.exists())
+            imgFile.delete();
+        render.toFile(imgFile);
+        if (imgFile.exists())
+            System.out.println(imgFile.getAbsolutePath());
     }
 
     public void buildGraphWithGraphViz() throws IOException {
