@@ -4,6 +4,7 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import partie2.exceptions.NotFoundPathProjectException;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -12,8 +13,11 @@ import java.util.Map;
 public class MyParser {
     private File folder;
 
-    public MyParser(String projectPath) {
+    public MyParser(String projectPath) throws NotFoundPathProjectException {
         this.folder = new File(projectPath);
+        if (!this.folder.exists() || !this.folder.isDirectory()) {
+            throw new NotFoundPathProjectException("Le dossier "+projectPath+" spécifié est introuvable.");
+        }
     }
 
     public ArrayList<File> listJavaFilesForFolderBis(File folder) {

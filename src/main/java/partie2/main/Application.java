@@ -1,15 +1,24 @@
 package partie2.main;
 
+import partie2.exceptions.EmptyProjectException;
+import partie2.exceptions.NotFoundPathProjectException;
 import partie2.processor.VisitDataCollector;
 
 import java.io.IOException;
 import java.util.Scanner;
 
-public class Main {
-    private static Scanner sc;
+public class Application {
+    private Scanner sc;
+    private StringBuilder listFeatures;
 
-    private static void displayFeatures() {
-        StringBuilder listFeatures = new StringBuilder();
+    public Application() {
+        sc = new Scanner(System.in);
+        buildMenu();
+    }
+
+    private void buildMenu() {
+        listFeatures = new StringBuilder();
+        listFeatures.append("==============================   MENU   ==============================\n");
         listFeatures.append("0.        Analyser un nouveau projet\n");
         listFeatures.append("1.        Nombre de classes de l’application.\n");
         listFeatures.append("2.        Nombre de lignes de code de l’application.\n");
@@ -24,15 +33,19 @@ public class Main {
         listFeatures.append("11.       Les classes qui possèdent plus de X méthodes (la valeur de X est à saisir).\n");
         listFeatures.append("12.       Les 10% des méthodes qui possèdent le plus grand nombre de lignes de code (par classe).\n");
         listFeatures.append("13.       Le nombre maximal de paramètres par rapport à toutes les méthodes de l’application.\n");
-        listFeatures.append("14.       Générer un graph d'appel.\n");
+        listFeatures.append("14.       Générer un graphe d'appel.\n");
         listFeatures.append("menu.     Afficher le menu de nouveau.\n");
         listFeatures.append("quitter.  Quitter l’application.\n");
+    }
+
+    private void displayFeatures() {
         System.out.print(listFeatures);
     }
 
-    private static void chooseAFeatures(VisitDataCollector visitDataCollector) throws IOException, InterruptedException {
+    private void chooseAFeatures(VisitDataCollector visitDataCollector) throws IOException, InterruptedException, EmptyProjectException, NotFoundPathProjectException {
         displayFeatures();
         String choice = "";
+        int tmp = 0;
         while (!choice.equals("quitter")) {
             System.out.print("\nCHOISIR UNE OPTION : ");
             choice = sc.nextLine();
@@ -57,13 +70,16 @@ public class Main {
                     System.out.println("Le nombre total de packages de l’application : " + visitDataCollector.getTotalNumberOfAppPackages());
                     break;
                 case "5":
-                    System.out.println("Le nombre moyen de méthodes par classe : " + visitDataCollector.getAverageNumberOfMethodsDependingOnClasses());
+                    tmp = visitDataCollector.getAverageNumberOfMethodsDependingOnClasses();
+                    System.out.println("Le nombre moyen de méthodes par classe : " + (tmp == -1 ? "incalculable car le nombre de classes est égal à 0." : tmp));
                     break;
                 case "6":
-                    System.out.println("Le nombre moyen de lignes de code par méthode : " + visitDataCollector.getAverageNumberOfCodeLinesDependingOnMethod());
+                    tmp = visitDataCollector.getAverageNumberOfCodeLinesDependingOnMethod();
+                    System.out.println("Le nombre moyen de lignes de code par méthode : " + (tmp == -1 ? "incalculable car le nombre de méthodes est égal à 0." : tmp));
                     break;
                 case "7":
-                    System.out.println("Le nombre moyen d’attributs par classe : " + visitDataCollector.getAverageNumberOfAttributesDependingOnClasses());
+                    tmp = visitDataCollector.getAverageNumberOfAttributesDependingOnClasses();
+                    System.out.println("Le nombre moyen d’attributs par classe : " + (tmp == -1 ? "incalculable car le nombre de classes est égal à 0." : tmp));
                     break;
                 case "8":
                     System.out.println("Les 10% des classes qui possèdent le plus grand nombre de méthodes : ");
@@ -79,8 +95,17 @@ public class Main {
                     break;
                 case "11":
                     System.out.print("Les classes qui possèdent plus de X méthodes : X = ");
-                    int x = sc.nextInt();
-                    VisitDataCollector.displayMapClassInteger(visitDataCollector.getClassesWithNbMethodsMoreThanX(x));
+                    boolean badInput = true;
+                    while (badInput) {
+                        try {
+                            int x = sc.nextInt();
+                            VisitDataCollector.displayMapClassInteger(visitDataCollector.getClassesWithNbMethodsMoreThanX(x));
+                            badInput = true;
+                        } catch (Exception e) {
+                            System.err.print("X doit être un nombre entier : ");
+                        }
+                    }
+
                     break;
                 case "12":
                     System.out.println("Les 10% des méthodes qui possèdent le plus grand nombre de lignes de code (par classe) : ");
@@ -111,8 +136,8 @@ public class Main {
         }
     }
 
-    private static void openCLI() throws IOException, InterruptedException {
-        System.out.println("Veuillez indiquer le repertoire vers le projet à analyser : ");
+    private void launch() throws IOException, InterruptedException, EmptyProjectException, NotFoundPathProjectException {
+        System.out.print("Veuillez indiquer le repertoire vers le projet à analyser : ");
         String projectPath = sc.nextLine();
 
         VisitDataCollector visitDataCollector = new VisitDataCollector();
@@ -121,7 +146,7 @@ public class Main {
         chooseAFeatures(visitDataCollector);
     }
 
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws IOException, InterruptedException, EmptyProjectException, NotFoundPathProjectException {
         System.out.println
                 (
                         " -----------------------------------------------\n" +
@@ -130,9 +155,8 @@ public class Main {
                         "| DE REALISER UNE ANALYSE STATIQUE D'UN PROJET. |\n" +
                         " -----------------------------------------------\n"
                 );
-        sc = new Scanner(System.in);
-        openCLI();
-        Thread.sleep(1000);
-        sc.close();
+
+        Application application = new Application();
+        application.launch();
     }
 }

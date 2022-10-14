@@ -8,7 +8,7 @@ import java.util.List;
 public class Test implements ITest {
     private String attr2;
     private int attr1;
-    private List<Integer> attr3; // Not count
+    private List<Integer> attr3;
 
     public Test() {
         this.attr1 = 15;
@@ -42,6 +42,8 @@ public class Test implements ITest {
             }
             do {
                 attr3.remove(0);
+                System.out.println("");
+                System.out.println("");
             } while (attr3.size() > 5);
         }
     }

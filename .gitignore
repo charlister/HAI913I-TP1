@@ -35,6 +35,10 @@ build/
 ### Graph files ###
 graph*
 
+### Sub Porject to analyse
+src/main/java/project/src/main/Main.java
+src/main/java/project/src/logic/Test.java
+
 ### VS Code ###
 .vscode/
 

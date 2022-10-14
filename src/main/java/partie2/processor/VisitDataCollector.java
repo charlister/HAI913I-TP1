@@ -13,6 +13,8 @@ import org.eclipse.jdt.core.dom.*;
 import org.jgraph.graph.DefaultEdge;
 import org.jgrapht.ext.JGraphXAdapter;
 import org.jgrapht.graph.DefaultDirectedGraph;
+import partie2.exceptions.EmptyProjectException;
+import partie2.exceptions.NotFoundPathProjectException;
 import partie2.parser.MyParser;
 import partie2.visitors.*;
 
@@ -128,6 +130,9 @@ public class VisitDataCollector {
 
     // 6.
     public int getAverageNumberOfCodeLinesDependingOnMethod() {
+        if (methodCounter == 0) {
+            return -1;
+        }
         return mapMethodNbLines
                 .values()
                 .stream()
@@ -151,6 +156,9 @@ public class VisitDataCollector {
 
     // 7.
     public int getAverageNumberOfAttributesDependingOnClasses() {
+        if (classCounter == 0) {
+            return -1;
+        }
         return attributeCounter/classCounter;
     }
 
@@ -387,10 +395,12 @@ public class VisitDataCollector {
     }
 
 //    COLLECT DATA PROJECT
-    public void makeAnalysis(String pathProject) throws IOException {
-//        ProjectExplorer projectExplorer = new ProjectExplorer(pathProject);
+    public void makeAnalysis(String pathProject) throws IOException, EmptyProjectException, NotFoundPathProjectException {
         MyParser parser = new MyParser(pathProject);
         ArrayList<File> javaFiles = parser.listJavaFilesForFolder();
+        if (javaFiles.isEmpty()) {
+            throw new EmptyProjectException("Le project "+pathProject+" ne contient aucun fichier source.");
+        }
         for(File javaFile : javaFiles) {
             String content = FileUtils.readFileToString(javaFile);
             CompilationUnit cu = parser.parseSource(content.toCharArray());

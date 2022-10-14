@@ -5,11 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="52147c33-4d80-4b85-81d4-a2df99befb45" name="Changes" comment="gestion du graphe d'appel">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/partie2/main/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/partie2/main/Application.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/partie2/parser/MyParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/partie2/parser/MyParser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/partie2/processor/VisitDataCollector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/partie2/processor/VisitDataCollector.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/partie2/projectexplorer/ProjectExplorer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/partie2/visitors/MethodInvocationVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/partie2/visitors/MethodInvocationVisitor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/project/src/logic/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/project/src/logic/Test.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,8 +65,8 @@
     </key>
   </component>
   <component name="RunManager">
-    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="partie2.main.Main" />
+    <configuration name="Application" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="partie2.main.Application" />
       <module name="TP1" />
       <extension name="coverage">
         <pattern>
@@ -101,7 +102,7 @@
       <workItem from="1665142131939" duration="7391000" />
       <workItem from="1665403745543" duration="36483000" />
       <workItem from="1665590628097" duration="25345000" />
-      <workItem from="1665673853494" duration="18560000" />
+      <workItem from="1665673853494" duration="23661000" />
     </task>
     <task id="LOCAL-00001" summary="first commit">
       <created>1664706701788</created>
@@ -138,7 +139,14 @@
       <option name="project" value="LOCAL" />
       <updated>1665686261454</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="gestion du graphe d'appel">
+      <created>1665742870023</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1665742870023</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
