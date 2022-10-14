@@ -27,6 +27,7 @@ Cette application permet d'obtenir :
 - Les classes qui possèdent plus de X méthodes (la valeur de X est à saisir).
 - Les 10% des méthodes qui possèdent le plus grand nombre de lignes de code (par classe).
 - Le nombre maximal de paramètres par rapport à toutes les méthodes de l'application.
+- Afficher le graphe d'appel.
 
 
 ## Auteur
