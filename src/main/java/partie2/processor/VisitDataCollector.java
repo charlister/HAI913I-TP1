@@ -14,7 +14,6 @@ import org.jgraph.graph.DefaultEdge;
 import org.jgrapht.ext.JGraphXAdapter;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import partie2.parser.MyParser;
-import partie2.projectexplorer.ProjectExplorer;
 import partie2.visitors.*;
 
 import javax.imageio.ImageIO;
@@ -37,7 +36,6 @@ public class VisitDataCollector {
     private Map<MethodDeclaration, Integer> mapMethodNbParams;
     private Set<String> packageNames;
     private Map<TypeDeclaration, Map<MethodDeclaration, Set<MethodInvocation>>> mapTheCallGraph;
-    private StringBuilder strBuilderGraphData;
     private Set<String> setLink;
     private DefaultDirectedGraph<String, DefaultEdge> graph;
 
@@ -52,8 +50,7 @@ public class VisitDataCollector {
         this.mapMethodNbParams    = new HashMap<>();
         this.packageNames         = new HashSet<>();
         this.mapTheCallGraph      = new HashMap<>();
-        this.strBuilderGraphData = new StringBuilder();
-        setLink = new HashSet<>();
+        this.setLink = new HashSet<>();
         this.graph = new DefaultDirectedGraph<>(DefaultEdge.class);
     }
 
@@ -313,6 +310,17 @@ public class VisitDataCollector {
 
                         setLink.add("\t\""+caller+"\"->\""+callee+"\"\n");
                     }
+                    else {
+                        if (!isMethodNodeAdded) {
+                            graph.addVertex(caller);
+                            isMethodNodeAdded = true;
+                        }
+                        callee = nodeClass.getName()+"::"+methodInvocation.getName();
+                        graph.addVertex(callee);
+                        graph.addEdge(caller, callee);
+
+                        setLink.add("\t\""+caller+"\"->\""+callee+"\"\n");
+                    }
                 }
             }
             mapTheCallGraph.put(nodeClass, mapMethodDeclarationInvocation);
@@ -336,11 +344,9 @@ public class VisitDataCollector {
     private void writeGraphInDotFile(String fileGraphPath) throws IOException {
         FileWriter fW = new FileWriter(fileGraphPath);
         fW.write("digraph G {\n");
-        for (String link :
-                setLink) {
+        for (String link : setLink) {
             fW.write(link);
         }
-//        fW.write(strBuilderGraphData.toString());
         fW.write("}");
         fW.close();
     }
@@ -356,6 +362,7 @@ public class VisitDataCollector {
         writeGraphInDotFile("graph.dot");
         convertDotToSVG("graph.dot");
     }
+
     public static void displayTheCAllGraph(Map<TypeDeclaration, Map<MethodDeclaration, Set<MethodInvocation>>> aCallGraph) {
         Set<Map.Entry<TypeDeclaration, Map<MethodDeclaration, Set<MethodInvocation>>>> set = aCallGraph.entrySet();
         String callee;
@@ -381,11 +388,12 @@ public class VisitDataCollector {
 
 //    COLLECT DATA PROJECT
     public void makeAnalysis(String pathProject) throws IOException {
-        ProjectExplorer projectExplorer = new ProjectExplorer(pathProject);
-        ArrayList<File> javaFiles = projectExplorer.listJavaFilesForFolder();
+//        ProjectExplorer projectExplorer = new ProjectExplorer(pathProject);
+        MyParser parser = new MyParser(pathProject);
+        ArrayList<File> javaFiles = parser.listJavaFilesForFolder();
         for(File javaFile : javaFiles) {
             String content = FileUtils.readFileToString(javaFile);
-            CompilationUnit cu = MyParser.parseSource(content.toCharArray());
+            CompilationUnit cu = parser.parseSource(content.toCharArray());
 
             collectApplicationMethodsData(cu); 
             collectAppPackages(cu);
