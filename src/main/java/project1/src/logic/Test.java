@@ -1,6 +1,6 @@
-package project.src.logic;
+package project1.src.logic;
 
-import project.src.ilogic.ITest;
+import project1.src.ilogic.ITest;
 
 import java.util.ArrayList;
 import java.util.List;

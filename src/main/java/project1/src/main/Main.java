@@ -1,6 +1,6 @@
-package project.src.main;
+package project1.src.main;
 
-import project.src.logic.Test;
+import project1.src.logic.Test;
 
 public class Main {
 

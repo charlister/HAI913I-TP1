@@ -5,9 +5,9 @@ Ce TP issus de l'UE d'Evolution et de Restructuration de Logiciels permet de ré
 
 ## Description des packages
 
-- src/main/java/projects :
-
-  Dans ce package, figure une sorte de mini projet que l'on pourrait analyser
+Dans ces packages, figurent des minis projets que l'on pourrait analyser : 
+- src/main/java/project1
+- src/main/java/project2
 
 
 ## Fonctionnalités
