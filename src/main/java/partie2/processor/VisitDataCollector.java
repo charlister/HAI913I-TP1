@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class VisitDataCollector {
@@ -41,6 +42,9 @@ public class VisitDataCollector {
     private Set<String> setLink;
     private DefaultDirectedGraph<String, DefaultEdge> graphJGraphT;
 
+    /**
+     * Constructeur par défaut pour la classe {@link VisitDataCollector}
+     */
     public VisitDataCollector() {
         this.classCounter      = 0;
         this.lineOfCodeCounter = 0;
@@ -57,6 +61,10 @@ public class VisitDataCollector {
     }
 
     // 1 bis.
+    /**
+     * Compter le nombre de classes présentes dans le projet, y compris les classes imbriquées.
+     * @param cu AST Node racine
+     */
     private void collectNumberOfApplicationClasses(CompilationUnit cu) {
         TypeDeclarationVisitor visitorClass = new TypeDeclarationVisitor();
         cu.accept(visitorClass);
@@ -64,11 +72,19 @@ public class VisitDataCollector {
     }
 
     // 1.
+    /**
+     * accéder au nombre de classes du projet.
+     * @return le nombre de classes du projet parsé.
+     */
     public int getNumberOfApplicationClasses() {
         return classCounter;
     }
 
     // 2 bis.
+    /**
+     * Compter le nombre de lignes de code du projet.
+     * @param cu AST Node racine
+     */
     private void collectNumberOfLineOfApplicationCode(CompilationUnit cu) {
         GreaterVisitor visitorFileSource = new GreaterVisitor();
         cu.accept(visitorFileSource);
@@ -76,11 +92,19 @@ public class VisitDataCollector {
     }
 
     // 2.
+    /**
+     * Obtenir le nombre de lignes de code du projet.
+     * @return le nombre de lignes de code du projet parsé.
+     */
     public int getNumberOfLineOfApplicationCode() {
         return lineOfCodeCounter;
     }
 
     // 3 bis.
+    /**
+     * Compter le nombre de méthodes du projet et collecter le nombre de méthodes par classe.
+     * @param cu AST Node racine
+     */
     private void collectApplicationMethodsData(CompilationUnit cu) {
         TypeDeclarationVisitor visitorClass = new TypeDeclarationVisitor();
         cu.accept(visitorClass);
@@ -96,11 +120,21 @@ public class VisitDataCollector {
     }
 
     // 3.
+    /**
+     * obtenir le nombre de méthodes du projet.
+     * @return le nombre de méthodes présentes dans le projet.
+     */
     public int getNumberOfApplicationMethods() {
         return methodCounter;
     }
 
     // 4 bis.
+    /**
+     * Collecter les noms de packages extraits à partir du projet.
+     * Ex : un fichier .java dans un package x.y.z1 permet de déduire les packages x, x.y et x.y.z1
+     *      Un autre fichier .java du même projet dans un package x.y.z2 ne permettra de récupérer que le pacakge x.y.z2 car x et x.y ont déjà été extraits.
+     * @param cu AST Node racine
+     */
     private void collectAppPackages(CompilationUnit cu) {
         PackageDeclarationVisitor visitorPackage = new PackageDeclarationVisitor();
         cu.accept(visitorPackage);
@@ -108,16 +142,28 @@ public class VisitDataCollector {
     }
 
     // 4.
+    /**
+     * Obtenir le nombre total de packages du projet.
+     * @return le nombre de packages du projet.
+     */
     public int getTotalNumberOfAppPackages() {
         return packageNames.size();
     }
 
     // 5.
+    /**
+     * Obtenir le nombre moyen de méthodes par rapport au nombre de classes.
+     * @return (nombre de méthodes)/(nombre de classes)
+     */
     public int getAverageNumberOfMethodsDependingOnClasses() {
         return methodCounter/classCounter;
     }
 
     // 6 bis.
+    /**
+     * Collecter le nombre de lignes par méthode.
+     * @param cu AST Node racine
+     */
     private void collectNumberOfRowByMethod(CompilationUnit cu) {
         MethodDeclarationVisitor visitorMethod = new MethodDeclarationVisitor();
         cu.accept(visitorMethod);
@@ -129,6 +175,10 @@ public class VisitDataCollector {
     }
 
     // 6.
+    /**
+     * Obtenir le nombre moyen de ligne de code des méthodes.
+     * @return (somme du nombre de lignes de code des méthodes)/(nombre de méthodes)
+     */
     public int getAverageNumberOfCodeLinesDependingOnMethod() {
         if (methodCounter == 0) {
             return -1;
@@ -140,6 +190,10 @@ public class VisitDataCollector {
     }
 
     // 7 bis.
+    /**
+     * Compter le nombre d'attributs du projet et collecter le nombre d'attributs par classe.
+     * @param cu AST Node racine
+     */
     private void collectAttributeData(CompilationUnit cu) {
         TypeDeclarationVisitor visitorClass = new TypeDeclarationVisitor();
         cu.accept(visitorClass);
@@ -155,6 +209,10 @@ public class VisitDataCollector {
     }
 
     // 7.
+    /**
+     * Obtenir le nombre moyen d'attributs par classe
+     * @return (le nombre total d'attributs)/(le nombre de classes)
+     */
     public int getAverageNumberOfAttributesDependingOnClasses() {
         if (classCounter == 0) {
             return -1;
@@ -163,11 +221,21 @@ public class VisitDataCollector {
     }
 
     // 8, 9 bis.
+    /**
+     * Obtenir les 10% du nombre de classes du projet (on ne prend que la partie entière).
+     * @return (nombre de classes)*0.1
+     */
     private int get10PercentsOfTotalNumberOfClasses() {
         return (int) (((double) classCounter)*10/100);
     }
 
     // 8, 9 bis.
+    /**
+     * Trier une map de type <TypeDeclaration, Integer> dans un ordre décroissant et en extraire une sous-partie.
+     * @param map map à trier
+     * @param numberExpected nombre constituant le limit de la sous-partie.
+     * @return une map contenant au maximum numberExpected couples ({@link TypeDeclaration} ; {@link Integer})
+     */
     private Map<TypeDeclaration, Integer> sortMapClassIntegerAndLimit(Map<TypeDeclaration, Integer> map, int numberExpected) {
         // desc on map values
         return map
@@ -179,16 +247,28 @@ public class VisitDataCollector {
     }
 
     // 8.
+    /**
+     * obtenir les 10% de classes avec le plus grand nombre de méthodes.
+     * @return les 10% de classes avec le plus grand nombre de méthodes.
+     */
     public Map<TypeDeclaration, Integer> get10PercentsClassesWithMostMethods() {
         return sortMapClassIntegerAndLimit(mapClassNbMethods, get10PercentsOfTotalNumberOfClasses());
     }
 
     // 9.
+    /**
+     * obtenir les 10% de classes avec le plus grand nombre d'attributs.
+     * @return les 10% de classes avec le plus grand nombre d'attributs.
+     */
     public Map<TypeDeclaration, Integer> get10PercentsClassesWithMostAttributes() {
         return sortMapClassIntegerAndLimit(mapClassNbAttributes, get10PercentsOfTotalNumberOfClasses());
     }
 
     // 10.
+    /**
+     * obtenir les 10% de classes avec le plus grand nombre de méthodes et d'attributs.
+     * @return les 10% de classes avec le plus grand nombre de méthodes et d'attributs.
+     */
     public Map<TypeDeclaration, Integer> get10PercentsClassesWithMostAttributesAndMethods(Map<TypeDeclaration, Integer> map1, Map<TypeDeclaration, Integer> map2) {
         return map1
                 .entrySet()
@@ -198,6 +278,11 @@ public class VisitDataCollector {
     }
 
     // 11.
+    /**
+     * Obtenir les classes qui ont plus de x méthodes.
+     * @param x (+1), le nombre minimal de méthodes dont doit disposer une classe pour figurer dans la map.
+     * @return les classes qui ont plus de x méthodes.
+     */
     public Map<TypeDeclaration, Integer> getClassesWithNbMethodsMoreThanX(int x) {
         return mapClassNbMethods
                 .entrySet()
@@ -207,6 +292,12 @@ public class VisitDataCollector {
     }
 
     // 12 bis.
+    /**
+     * trier une map de type <MethodDeclaration, Integer> dans un ordre décroissant.
+     * @param map map à trier
+     * @param numberExpected nombre limite de couple <MethodDeclaration, Integer> à extraire de la map.
+     * @return une map trié dans un ordre décroissant avec numberExpected éléments au maximum.
+     */
     private Map<MethodDeclaration, Integer> sortMapMethodIntegerAndLimit(Map<MethodDeclaration, Integer> map, int numberExpected) {
         // desc on map values
         return map
@@ -218,16 +309,29 @@ public class VisitDataCollector {
     }
 
     // 12 bis.
+    /**
+     * Obtenir les 10% du nombre de méthodes du projet (on ne prend que la partie entière).
+     * @return (nombre de méthodes)*0.1
+     */
     private int get10PercentsOfTotalNumberOfMethods() {
         return (int) (((double) methodCounter)*10/100);
     }
 
     // 12.
+
+    /**
+     * Les 10% de méthodes avec le plus de lignes de code.
+     * @return une liste triée dans un ordre décroissant ne contenant que 10% de couples du type <MethodDeclaration, Integer>.
+     */
     public Map<MethodDeclaration, Integer> get10PercentsMethodsWithMostLinesOfCode() {
         return sortMapMethodIntegerAndLimit(mapMethodNbLines, get10PercentsOfTotalNumberOfMethods());
     }
 
     // 13 bis.
+    /**
+     * collecter le nombre de paramètres par méthode
+     * @param cu AST Node racine.
+     */
     private void collectMethodParamsData(CompilationUnit cu) {
         MethodDeclarationVisitor visitorMethodParameters = new MethodDeclarationVisitor();
         cu.accept(visitorMethodParameters);
@@ -238,15 +342,27 @@ public class VisitDataCollector {
     }
 
     // 13.
+    /**
+     * Obtenir la méthode qui possède le plus de paramètres et son nombre de paramètres.
+     * @return une map avec un seul élément qui est la méthode qui possède le plus de paramètres.
+     */
     public Map<MethodDeclaration, Integer> getMethodWithMostParams() {
         return sortMapMethodIntegerAndLimit(mapMethodNbParams, 1);
     }
 
     // 14.
+    /**
+     * Obtenir un objet permettant d'accéder à l'ensemble des informations nécessaires à former un graphe d'appel.
+     * @return une map contenant un graphe d'appel.
+     */
     public Map<TypeDeclaration, Map<MethodDeclaration, Set<MethodInvocation>>> getTheCallGraph() {
         return mapTheCallGraph;
     }
 
+    /**
+     * Afficher une map de type <TypeDeclaration, Integer>
+     * @param map map à afficher
+     */
     public static void displayMapClassInteger(Map<TypeDeclaration, Integer> map) {
         map
                 .entrySet()
@@ -257,6 +373,10 @@ public class VisitDataCollector {
                 );
     }
 
+    /**
+     * Afficher une map de type <MethodDeclaration, Integer>
+     * @param map map à afficher
+     */
     public static void displayMapMethodInteger(Map<MethodDeclaration, Integer> map) {
         map
                 .entrySet()
@@ -268,6 +388,13 @@ public class VisitDataCollector {
     }
 
 //    BUILD GRAPH
+
+    /**
+     * Collecter l'ensemble des informations nécessaire à constituer un graphe d'appel,
+     * récupérer l'ensemble des liens dans un ensemble afin de générer un fichier .dot pour réaliser un affichage graphique avec GraphViz,
+     * remplir un objet de type DefaultDirectedGraph<String, DefaultEdge> pour réaliser un affichage graphique avec JGraphT
+     * @param cu
+     */
     private void collectGraphData(CompilationUnit cu) {
         boolean isMethodNodeAdded;
         TypeDeclarationVisitor visitorClass = new TypeDeclarationVisitor();
@@ -335,6 +462,10 @@ public class VisitDataCollector {
         }
     }
 
+    /**
+     * Réaliser un affichage graphique avec JGraphT
+     * @throws IOException
+     */
     public void buildGraphWithJGraphT() throws IOException {
         JGraphXAdapter<String, DefaultEdge> graphAdapter = new JGraphXAdapter<String, DefaultEdge>(graphJGraphT);
         mxIGraphLayout layout = new mxCircleLayout(graphAdapter);
@@ -355,6 +486,11 @@ public class VisitDataCollector {
         }
     }
 
+    /**
+     * Générer un fichier .dot à partir des liens récupérés dans la méthode collectGraphData
+     * @param fileGraphPath chemin vers un fichier .dot
+     * @throws IOException
+     */
     private void writeGraphInDotFile(String fileGraphPath) throws IOException {
         FileWriter fW = new FileWriter(fileGraphPath);
         fW.write("digraph G {\n");
@@ -365,6 +501,11 @@ public class VisitDataCollector {
         fW.close();
     }
 
+    /**
+     * Convertir un fichier .dot au format .svg
+     * @param fileGraphPath chemin vers le fichier .dot à convertir en svg.
+     * @throws IOException
+     */
     private void convertDotToSVG(String fileGraphPath) throws IOException {
         Parser p = new Parser();
         MutableGraph g = p.read(new File(fileGraphPath));
@@ -377,11 +518,19 @@ public class VisitDataCollector {
             System.out.println(imgFile.getAbsolutePath());
     }
 
+    /**
+     * Affichage graphique d'un graphe avec GraphViz.
+     * @throws IOException
+     */
     public void buildGraphWithGraphViz() throws IOException {
         writeGraphInDotFile("graph.dot");
         convertDotToSVG("graph.dot");
     }
 
+    /**
+     * Afficher en mode console le graphe d'appel.
+     * @param aCallGraph
+     */
     public static void displayTheCAllGraph(Map<TypeDeclaration, Map<MethodDeclaration, Set<MethodInvocation>>> aCallGraph) {
         Set<Map.Entry<TypeDeclaration, Map<MethodDeclaration, Set<MethodInvocation>>>> set = aCallGraph.entrySet();
         String callee;
@@ -406,9 +555,17 @@ public class VisitDataCollector {
     }
 
 //    COLLECT DATA PROJECT
+
+    /**
+     * collecter l'ensemble des données souhaitées pour le TP.
+     * @param pathProject chemin vers le projet à analyser.
+     * @throws IOException
+     * @throws EmptyProjectException
+     * @throws NotFoundPathProjectException
+     */
     public void makeAnalysis(String pathProject) throws IOException, EmptyProjectException, NotFoundPathProjectException {
         MyParser parser = new MyParser(pathProject);
-        ArrayList<File> javaFiles = parser.listJavaFilesForFolder();
+        List<File> javaFiles = parser.listJavaFilesForFolder();
         if (javaFiles.isEmpty()) {
             throw new EmptyProjectException("Le project "+pathProject+" ne contient aucun fichier source.");
         }

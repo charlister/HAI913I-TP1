@@ -9,6 +9,7 @@ import java.util.List;
 public class PackageDeclarationVisitor extends ASTVisitor {
     private String packageDeclarationName = "";
 
+    @Override
     public boolean visit(PackageDeclaration node) {
         packageDeclarationName = node.getName().toString();
         return super.visit(node);

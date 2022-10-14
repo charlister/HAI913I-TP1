@@ -14,6 +14,7 @@ public class FieldDeclarationVisitor extends ASTVisitor {
         this.fieldDeclarationList = new ArrayList<>();
     }
 
+    @Override
     public boolean visit(FieldDeclaration node) {
         fieldDeclarationList.add(node);
         return super.visit(node);

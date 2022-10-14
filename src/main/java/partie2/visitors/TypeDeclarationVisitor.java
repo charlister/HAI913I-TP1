@@ -13,6 +13,7 @@ public class TypeDeclarationVisitor extends ASTVisitor {
         this.typeDeclarationList = new ArrayList<>();
     }
 
+    @Override
     public boolean visit(TypeDeclaration node) {
         if(!node.isInterface() /* for not considerate interfaces */ /* && !node.isMemberTypeDeclaration() /* to ignore nested classes */) {
             typeDeclarationList.add(node);

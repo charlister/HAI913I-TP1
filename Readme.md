@@ -3,12 +3,6 @@
 
 Ce TP issu de l'UE d'Evolution et de Restructuration de Logiciels permet de réaliser une analyse statique du code source d'un projet Java.
 
-## Description des packages
-
-Dans ces packages, figurent des minis projets que l'on pourrait analyser : 
-- src/main/java/project1
-- src/main/java/project2
-
 
 ## Fonctionnalités
 

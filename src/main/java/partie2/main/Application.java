@@ -11,11 +11,17 @@ public class Application {
     private Scanner sc;
     private StringBuilder listFeatures;
 
+    /**
+     * Constructeur par défaut pour la classe {@link Application}
+     */
     public Application() {
         sc = new Scanner(System.in);
         buildMenu();
     }
 
+    /**
+     * cette méthode sert à initialiser l'attribut listFeatures.
+     */
     private void buildMenu() {
         listFeatures = new StringBuilder();
         listFeatures.append("==============================   MENU   ==============================\n");
@@ -34,19 +40,30 @@ public class Application {
         listFeatures.append("12.       Les 10% des méthodes qui possèdent le plus grand nombre de lignes de code (par classe).\n");
         listFeatures.append("13.       Le nombre maximal de paramètres par rapport à toutes les méthodes de l’application.\n");
         listFeatures.append("14.       Générer un graphe d'appel.\n");
-        listFeatures.append("menu.     Afficher le menu de nouveau.\n");
         listFeatures.append("quitter.  Quitter l’application.\n");
     }
 
+    /**
+     * Cette méthode sert à afficher le menu de l'application.
+     */
     private void displayFeatures() {
         System.out.print(listFeatures);
     }
 
+    /**
+     * Cette méthode permet à l'utilisateur d'interagir avec l'application.
+     * @param visitDataCollector cet objet permet d'accéder à l'ensemble des données recueillies lors de l'analyse du projet.
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws EmptyProjectException
+     * @throws NotFoundPathProjectException
+     */
     private void chooseAFeatures(VisitDataCollector visitDataCollector) throws IOException, InterruptedException, EmptyProjectException, NotFoundPathProjectException {
-        displayFeatures();
         String choice = "";
         int tmp = 0;
         while (!choice.equals("quitter")) {
+            displayFeatures();
+            Thread.sleep(1000);
             System.out.print("\nCHOISIR UNE OPTION : ");
             choice = sc.nextLine();
             switch (choice.trim()) {
@@ -124,21 +141,26 @@ public class Application {
                     Thread.sleep(1000);
                     System.out.println("Graphe d'appel généré !");
                     break;
-                case "menu":
-                    displayFeatures();
-                    break;
                 case "quitter":
                     break;
                 default:
                     System.err.println("Choix incorrect ... Veuillez recommencer !");
+                    Thread.sleep(1000);
                     break;
             }
         }
     }
 
+    /**
+     * Cette méthode permet démarrer l'application.
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws EmptyProjectException
+     * @throws NotFoundPathProjectException
+     */
     private void launch() throws IOException, InterruptedException, EmptyProjectException, NotFoundPathProjectException {
         System.out.print("Veuillez indiquer le repertoire vers le projet à analyser : ");
-        String projectPath = sc.nextLine();
+        String projectPath = sc.nextLine().trim();
 
         VisitDataCollector visitDataCollector = new VisitDataCollector();
         visitDataCollector.makeAnalysis(projectPath);
