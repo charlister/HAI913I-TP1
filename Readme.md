@@ -1,7 +1,7 @@
 
 # Analyse statique de code java
 
-Ce TP issus de l'UE d'Evolution et de Restructuration de Logiciels permet de réaliser une analyse statique du code source d'un projet Java.
+Ce TP issu de l'UE d'Evolution et de Restructuration de Logiciels permet de réaliser une analyse statique du code source d'un projet Java.
 
 ## Description des packages
 
